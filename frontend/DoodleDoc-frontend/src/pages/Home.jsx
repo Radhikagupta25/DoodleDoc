@@ -13,7 +13,7 @@ function Home() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
 
     if (storedUser) {
       const user = JSON.parse(storedUser);

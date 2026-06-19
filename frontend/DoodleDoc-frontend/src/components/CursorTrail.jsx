@@ -14,7 +14,7 @@ function CursorTrail() {
                 (e.clientY - lastY) ** 2
             );
 
-            if (distance < 60) return;
+            if (distance < 40) return;
 
             lastX = e.clientX;
             lastY = e.clientY;
@@ -50,7 +50,7 @@ function CursorTrail() {
                     }}
                 >
                     <IoSparkles
-                        size={20 - index}
+                        size={25 - index}
                         color={index % 2 === 0 ? "#C86B85" : "#D4AF37"}
                     />
                 </div>

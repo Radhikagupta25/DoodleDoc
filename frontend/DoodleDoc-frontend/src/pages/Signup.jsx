@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import bg from "../assets/pastel-simple-background-free-vector.jpg";
 import Buttons from "../components/Buttons";
 import CursorTrail from "../components/CursorTrail";
+import { motion } from "framer-motion";
 
 function Signup() {
     const navigate = useNavigate();
@@ -60,7 +61,7 @@ function Signup() {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            localStorage.setItem(
+            sessionStorage.setItem(
                 "user",
                 JSON.stringify({
                     name: formData.name,
@@ -80,8 +81,25 @@ function Signup() {
             }}
         >
             <CursorTrail />
-            <div className="w-[92%] max-w-md p-5 sm:p-8 rounded-3xl bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl">
-
+            <motion.div
+                initial={{
+                    opacity: 0,
+                    y: 60,
+                    scale: 0.9,
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                }}
+                transition={{
+                    duration: 0.8,
+                    type: "spring",
+                    stiffness: 90,
+                    damping: 14,
+                }}
+                className="w-[92%] max-w-md p-5 sm:p-8 rounded-3xl bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl"
+            >
                 <h1 className="text-3xl sm:text-4xl font-black text-center text-[#3E627B]">
                     DoodleDoc
                 </h1>
@@ -196,9 +214,8 @@ function Signup() {
                         Login
                     </button>
                 </div>
-
-            </div>
-        </div>
+            </motion.div>
+        </div >
     );
 }
 
