@@ -5,6 +5,7 @@ function Buttons({
     onClick,
     variant = "blue",
     type = "button",
+    loading = false,
 }) {
     const styles = {
         blue:
@@ -18,9 +19,14 @@ function Buttons({
         <button
             type={type}
             onClick={onClick}
+            disabled={loading}
             className={styles[variant]}
         >
-            {children}
+            {loading ? (
+                <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+                children
+            )}
         </button>
     );
 }
