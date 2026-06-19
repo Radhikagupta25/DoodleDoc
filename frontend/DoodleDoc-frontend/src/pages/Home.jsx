@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import bg from "../assets/pastel-simple-background-free-vector.jpg";
@@ -10,6 +10,16 @@ function Home() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState("");
   const title = "DoodleDoc";
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUsername(user.name);
+    }
+  }, []);
 
   function createRoom() {
     setLoading("create");
@@ -35,10 +45,10 @@ function Home() {
       className="min-h-screen bg-cover bg-center relative"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <CursorTrail/>
+      <CursorTrail />
       <div className="absolute top-4 right-4 sm:top-6 sm:right-8">
         <Buttons variant="blue" onClick={userLogin}>
-          Login
+          {username ? `Hi, ${username}` : "Login"}
         </Buttons>
       </div>
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">

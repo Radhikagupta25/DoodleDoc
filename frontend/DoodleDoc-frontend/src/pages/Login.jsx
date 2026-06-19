@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import bg from "../assets/pastel-simple-background-free-vector.jpg";
 import Buttons from "../components/Buttons";
 import { useNavigate } from "react-router-dom";
+import CursorTrail from "../components/CursorTrail";
 
 
 function Login() {
@@ -58,6 +59,7 @@ function Login() {
                 backgroundImage: `url(${bg})`,
             }}
         >
+            <CursorTrail/>
             <div className="w-[92%] max-w-md p-5 sm:p-8 rounded-3xl bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl">
                 <h1 className="text-3xl sm:text-4xl font-black text-center text-[#3E627B]">
                     DoodleDoc
