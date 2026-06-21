@@ -14,7 +14,16 @@ function ExistingRoom() {
     e.preventDefault();
 
     if (!roomId.trim()) {
-      setError("Please enter a room ID");
+      setError("Enter a valid room ID");
+      return;
+    }
+    if (roomId.length !== 8) {
+      setError("Invalid Room ID format");
+      return;
+    }
+    const rooms = JSON.parse(localStorage.getItem("rooms")) || [];
+    if (!rooms.includes(roomId)) {
+      setError("Room does not exist");
       return;
     }
 

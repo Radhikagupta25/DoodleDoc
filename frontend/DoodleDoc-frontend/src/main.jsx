@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     },
     ,
     {
-        path: "/existinRoomLogin",
+        path: "/existingRoomLogin",
         element: <ExistingRoom />,
     },
     ,

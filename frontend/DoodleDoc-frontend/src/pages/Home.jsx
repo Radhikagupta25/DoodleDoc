@@ -25,6 +25,11 @@ function Home() {
     setLoading("create");
     setTimeout(() => {
       const roomId = nanoid(8);
+      const rooms = JSON.parse(localStorage.getItem("rooms")) || [];
+      if (!rooms.includes(roomId)) {
+        rooms.push(roomId);
+      }
+      localStorage.setItem("rooms", JSON.stringify(rooms));
       navigate(`/room/${roomId}`);
     }, 400);
   }
@@ -32,7 +37,7 @@ function Home() {
   function existingRoom() {
     setLoading("join");
     setTimeout(() => {
-      navigate("/existinRoomLogin");
+      navigate("/existingRoomLogin");
     }, 400);
   }
 
