@@ -60,7 +60,6 @@ function Login() {
                 backgroundImage: `url(${bg})`,
             }}
         >
-            <CursorTrail />
             <motion.div
                 initial={{
                     opacity: 0,

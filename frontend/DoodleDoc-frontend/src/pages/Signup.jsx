@@ -80,7 +80,6 @@ function Signup() {
                 backgroundImage: `url(${bg})`,
             }}
         >
-            <CursorTrail />
             <motion.div
                 initial={{
                     opacity: 0,
