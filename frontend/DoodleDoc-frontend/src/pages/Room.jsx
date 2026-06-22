@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import bg from "../assets/pastel-simple-background-free-vector.jpg";
 import { Pencil, Eraser, Palette, Type, Bold, Italic, Underline, Square, Circle, Diamond, Minus, MoveRight, Undo2, Redo2, Save, Trash2 } from "lucide-react";
 import Canvas from "../components/Canvas";
+import useWhiteboardStore from "../store/useWhiteboardStore";
 
 function Room() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("draw");
   const fontFamilies = ["Arial", "Verdana", "Tahoma", "Trebuchet MS", "Georgia", "Times New Roman", "Courier New", "Poppins", "Inter", "Roboto", "Montserrat", "Open Sans",];
   const fontSizes = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64,];
+  const { tool, setTool } = useWhiteboardStore();
 
   return (
     <div
@@ -46,11 +48,20 @@ function Room() {
         <div className="px-3 py-2 border-b border-[#E7EEF5] bg-white min-h-17.5 flex items-center">
           {activeTab === "draw" && (
             <div className="flex gap-2 overflow-x-auto">
-              <button className="p-3 rounded-xl bg-[#EEF6FC] text-[#5E88A5] hover:scale-105 transition">
+              <button className={`p-3 rounded-xl transition-all duration-200 ${tool === "pen"
+                ? "bg-[#6D8FAF] text-white shadow-lg scale-105"
+                : "bg-[#EEF6FC] text-[#5E88A5] hover:bg-[#DCEAF4]"
+                }`} onClick={() => setTool("pen")}>
                 <Pencil size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF4F7] text-[#C86B85] hover:scale-105 transition">
+              <button
+                onClick={() => setTool("eraser")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "eraser"
+                  ? "bg-[#C86B85] text-white shadow-lg scale-105"
+                  : "bg-[#FFF4F7] text-[#C86B85] hover:bg-[#FFE7EE]"
+                  }`}
+              >
                 <Eraser size={20} />
               </button>
 
@@ -128,23 +139,53 @@ function Room() {
           {activeTab === "shapes" && (
             <div className="flex gap-2 overflow-x-auto">
 
-              <button className="p-3 rounded-xl bg-[#FFF8E8] text-[#D4AF37]">
+              <button
+                onClick={() => setTool("rectangle")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "rectangle"
+                  ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                  : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  }`}
+              >
                 <Square size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF8E8] text-[#D4AF37]">
+              <button
+                onClick={() => setTool("circle")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "circle"
+                  ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                  : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  }`}
+              >
                 <Circle size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF8E8] text-[#D4AF37]">
+              <button
+                onClick={() => setTool("diamond")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "diamond"
+                  ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                  : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  }`}
+              >
                 <Diamond size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF8E8] text-[#D4AF37]">
+              <button
+                onClick={() => setTool("line")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "line"
+                  ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                  : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  }`}
+              >
                 <Minus size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF8E8] text-[#D4AF37]">
+              <button
+                onClick={() => setTool("arrow")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "arrow"
+                    ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                    : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  }`}
+              >
                 <MoveRight size={20} />
               </button>
 
