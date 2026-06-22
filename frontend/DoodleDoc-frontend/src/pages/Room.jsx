@@ -11,6 +11,9 @@ function Room() {
   const fontFamilies = ["Arial", "Verdana", "Tahoma", "Trebuchet MS", "Georgia", "Times New Roman", "Courier New", "Poppins", "Inter", "Roboto", "Montserrat", "Open Sans",];
   const fontSizes = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64,];
   const { tool, setTool } = useWhiteboardStore();
+  const { color, setColor } = useWhiteboardStore();
+  const { brushSize, setBrushSize, isBold, toggleBold, isItalic, toggleItalic, isUnderline, toggleUnderline, fontFamily, fontSize, setFontFamily, setFontSize } = useWhiteboardStore();
+  const colors = ["#3E627B", "#C86B85", "#D4AF37", "#4E9B68",];
 
   return (
     <div
@@ -69,27 +72,44 @@ function Room() {
 
                 <Palette size={18} className="text-[#D4AF37]" />
 
-                <button className="w-4 h-4 rounded-full bg-[#3E627B]" />
-                <button className="w-4 h-4 rounded-full bg-[#C86B85]" />
-                <button className="w-4 h-4 rounded-full bg-[#D4AF37]" />
-                <button className="w-4 h-4 rounded-full bg-[#4E9B68]" />
+                {colors.map((clr) => (
+                  <button
+                    key={clr}
+                    onClick={() => setColor(clr)}
+                    className={`w-4 h-4 rounded-full transition-all ${color === clr
+                      ? "scale-125 ring-2 ring-white"
+                      : ""
+                      }`}
+                    style={{
+                      backgroundColor: clr,
+                    }}
+                  />
+                ))}
 
                 <input
                   type="color"
-                  className="w-6 h-7 cursor-pointer rounded-full overflow-hidden bg-amber-50"
+                  value={color}
+                  onChange={(e) =>
+                    setColor(e.target.value)
+                  }
+                  className="w-7 h-7 cursor-pointer rounded-full "
                 />
 
               </div>
 
-              <select
-                className="px-3 py-2 rounded-xl bg-[#FFF4F7] text-[#C86B85]"
-              >
-                {fontSizes.map((font) => (
-                  <option key={font} value={font}>
-                    {font}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={brushSize}
+                onChange={(e) =>
+                  setBrushSize(Number(e.target.value))
+                }
+                className="w-32"
+              />
+              <span className="font-medium text-[#3E627B] align-middle">
+                {brushSize}px
+              </span>
 
             </div>
           )}
@@ -97,24 +117,51 @@ function Room() {
           {activeTab === "text" && (
             <div className="flex gap-2 overflow-x-auto">
 
-              <button className="p-3 rounded-xl bg-[#FFF4F7] text-[#C86B85]">
+              <button
+                onClick={() => setTool("text")}
+                className={`p-3 rounded-xl transition-all duration-200 ${tool === "text"
+                  ? "bg-[#C86B85] text-white shadow-lg scale-105"
+                  : "bg-[#FFF4F7] text-[#C86B85]"
+                  }`}
+              >
                 <Type size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF4F7] text-[#C86B85]">
+              <button
+                onClick={toggleBold}
+                className={`p-3 rounded-xl ${isBold
+                  ? "bg-[#C86B85] text-white"
+                  : "bg-[#FFF4F7] text-[#C86B85]"
+                  }`}
+              >
                 <Bold size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF4F7] text-[#C86B85]">
+              <button
+                onClick={toggleItalic}
+                className={`p-3 rounded-xl ${isItalic
+                  ? "bg-[#C86B85] text-white"
+                  : "bg-[#FFF4F7] text-[#C86B85]"
+                  }`}
+              >
                 <Italic size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#FFF4F7] text-[#C86B85]">
+              <button
+                onClick={toggleUnderline}
+                className={`p-3 rounded-xl ${isUnderline
+                  ? "bg-[#C86B85] text-white"
+                  : "bg-[#FFF4F7] text-[#C86B85]"
+                  }`}
+              >
                 <Underline size={20} />
               </button>
 
               <select
-                className="px-3 py-2 rounded-xl bg-[#FFF4F7] text-[#C86B85]"
+                className="px-3 py-2 rounded-xl bg-[#FFF4F7] text-[#C86B85]" value={fontFamily}
+                onChange={(e) =>
+                  setFontFamily(e.target.value)
+                }
               >
                 {fontFamilies.map((font) => (
                   <option key={font} value={font}>
@@ -123,7 +170,9 @@ function Room() {
                 ))}
               </select>
 
-              <select
+              <select value={fontSize}
+                onChange={(e) =>
+                  setFontSize(Number(e.target.value))}
                 className="px-3 py-2 rounded-xl bg-[#FFF4F7] text-[#C86B85]"
               >
                 {fontSizes.map((font) => (
@@ -182,8 +231,8 @@ function Room() {
               <button
                 onClick={() => setTool("arrow")}
                 className={`p-3 rounded-xl transition-all duration-200 ${tool === "arrow"
-                    ? "bg-[#D4AF37] text-white shadow-lg scale-105"
-                    : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
+                  ? "bg-[#D4AF37] text-white shadow-lg scale-105"
+                  : "bg-[#FFF8E8] text-[#D4AF37] hover:bg-[#FFF1C7]"
                   }`}
               >
                 <MoveRight size={20} />

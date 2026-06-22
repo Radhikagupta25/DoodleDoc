@@ -8,6 +8,13 @@ const useWhiteboardStore = create((set) => ({
     fontSize: 16,
     isBold: false,
     isItalic: false,
+    isUnderline: false,
+    fontSize: 20,
+    fontFamily: "Poppins",
+    setFontSize: (fontSize) =>
+        set({ fontSize }),
+    setFontFamily: (fontFamily) =>
+        set({ fontFamily }),
     setTool: (tool) => set({ tool }),
     setColor: (color) => set({ color }),
     setBrushSize: (brushSize) =>
@@ -23,6 +30,10 @@ const useWhiteboardStore = create((set) => ({
     toggleItalic: () =>
         set((state) => ({
             isItalic: !state.isItalic,
+        })),
+    toggleUnderline: () =>
+        set((state) => ({
+            isUnderline: !state.isUnderline,
         })),
 }));
 
