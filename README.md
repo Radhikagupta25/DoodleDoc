@@ -154,7 +154,7 @@ src/
 
 ---
 
-## 🎯 Learning Outcomes
+##  Learning Outcomes
 
 While building DoodleDoc, I explored:
 
@@ -169,7 +169,7 @@ While building DoodleDoc, I explored:
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 * Real-time collaboration
 * Multi-user rooms
@@ -182,7 +182,7 @@ While building DoodleDoc, I explored:
 
 ---
 
-## 👩‍💻 Author
+##  Author
 
 **Radhika Gupta**
 
