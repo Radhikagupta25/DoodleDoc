@@ -99,7 +99,7 @@ A feature-rich online whiteboard built with **React**, **Konva**, **Zustand**, a
 Clone the repository:
 
 ```bash
-git clone https://github.com/Radhikagupta25/doodledoc.git
+git clone https://github.com/Radhikagupta25/DoodleDoc.git
 ```
 
 Navigate to the project:
