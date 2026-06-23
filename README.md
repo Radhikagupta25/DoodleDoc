@@ -70,41 +70,31 @@ A feature-rich online whiteboard built with **React**, **Konva**, **Zustand**, a
 
 ### Home Page
 
-```md
 ![Home](./Screenshots/home-page.png)
-```
 
 ### Drawing Canvas
 
-```md
 ![Canvas](./Screenshots/canvas.png)
-```
 
 ### Login Page
 
-```md
 ![Shapes](./Screenshots/login-page.png)
-```
 
 ---
 
 ### Signup Page
 
-```md
 ![Shapes](./Screenshots/signup-page.png)
-```
 
 ---
 
 ### Join Room Page
 
-```md
 ![Shapes](./Screenshots/join-room-page.png)
-```
 
 ---
 
-## 📦 Installation
+##  Installation
 
 Clone the repository:
 
