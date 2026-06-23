@@ -14,6 +14,18 @@ function Room() {
   const { color, setColor } = useWhiteboardStore();
   const { brushSize, setBrushSize, isBold, toggleBold, isItalic, toggleItalic, isUnderline, toggleUnderline, fontFamily, fontSize, setFontFamily, setFontSize } = useWhiteboardStore();
   const colors = ["#3E627B", "#C86B85", "#D4AF37", "#4E9B68",];
+  const { deleteSelected, hasSelection, undo, redo, saveBoard } = useWhiteboardStore();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyRoomId = async () => {
+    await navigator.clipboard.writeText(id);
+
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
 
   return (
     <div
@@ -25,9 +37,12 @@ function Room() {
           <h1 className="text-2xl sm:text-3xl font-black text-[#3E627B]">
             DoodleDoc
           </h1>
-          <div className="px-4 py-2 rounded-full bg-[#EEF6FC] text-[#5E88A5] text-sm font-semibold">
+          <button
+            onClick={handleCopyRoomId}
+            className="px-4 py-2 rounded-full bg-[#EEF6FC] text-[#5E88A5] text-sm font-semibold hover:bg-[#DCEAF4] transition cursor-pointer"
+          >
             Room: {id}
-          </div>
+          </button>
         </div>
         <div className="flex gap-2 overflow-x-auto p-3 border-b border-[#E7EEF5] bg-[#FAFCFE]">
           {[
@@ -244,19 +259,30 @@ function Room() {
           {activeTab === "actions" && (
             <div className="flex gap-2 overflow-x-auto">
 
-              <button className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68]">
+              <button
+                onClick={undo}
+                className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68] hover:scale-105 transition"
+              >
                 <Undo2 size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68]">
+              <button
+                onClick={redo}
+                className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68] hover:scale-105 transition"
+              >
                 <Redo2 size={20} />
               </button>
 
-              <button className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68]">
+              <button className="p-3 rounded-xl bg-[#EDF9F1] text-[#4E9B68]" onClick={saveBoard}>
                 <Save size={20} />
               </button>
-
-              <button className="p-3 rounded-xl bg-[#FFE7EE] text-[#D55A7A]">
+              <button
+                onClick={deleteSelected}
+                className={`p-3 rounded-xl transition-all duration-200 ${hasSelection
+                  ? "bg-[#D55A7A] text-white shadow-lg scale-105"
+                  : "bg-[#FFE7EE] text-[#D55A7A]"
+                  }`}
+              >
                 <Trash2 size={20} />
               </button>
 
@@ -268,12 +294,17 @@ function Room() {
 
           <div className="w-full h-full rounded-3xl bg-white border-2 border-[#E7EEF5] shadow-inner overflow-hidden">
 
-            <Canvas />
+            <Canvas roomId={id} />
 
           </div>
 
         </div>
       </div>
+      {copied && (
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#6D8FAF] text-white px-5 py-3 rounded-xl shadow-lg font-medium z-50">
+          Copied to Clipboard!
+        </div>
+      )}
     </div>
   );
 }

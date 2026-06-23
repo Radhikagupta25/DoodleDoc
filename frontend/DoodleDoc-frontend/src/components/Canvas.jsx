@@ -2,13 +2,13 @@ import React, { useRef, useState, useEffect } from "react";
 import { Stage, Layer, Line, Rect, Circle, Arrow, RegularPolygon, Transformer, Text, } from "react-konva";
 import useWhiteboardStore from "../store/useWhiteboardStore";
 
-function Canvas() {
+function Canvas({ roomId }) {
     const containerRef = useRef();
     const [size, setSize] = useState({
         width: 0,
         height: 0,
     });
-    const { tool, color, brushSize, fontSize, fontFamily, isBold, isItalic, isUnderline, } = useWhiteboardStore();
+    const { tool, color, brushSize, fontSize, fontFamily, isBold, isItalic, isUnderline, setTool, } = useWhiteboardStore();
     const [lines, setLines] = useState([]);
     const [shapes, setShapes] = useState([]);
     const [startPos, setStartPos] = useState(null);
@@ -18,9 +18,99 @@ function Canvas() {
     const transformerRef = useRef();
     const selectedNodeRef = useRef();
     const [texts, setTexts] = useState([]);
-    const [editingId, setEditingId] = useState(null);
     const [selectedTextId, setSelectedTextId] = useState(null);
     const [textInput, setTextInput] = useState(null);
+    const { deleteSelected, setDeleteSelected, setHasSelection, setRedo, setUndo, setSaveBoard } = useWhiteboardStore();
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [history, setHistory] = useState([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    const stageRef = useRef();
+    const undo = () => {
+        if (historyIndex <= 0) return;
+
+        const newIndex = historyIndex - 1;
+
+        setHistoryIndex(newIndex);
+
+        setLines(history[newIndex].lines);
+        setShapes(history[newIndex].shapes);
+        setTexts(history[newIndex].texts);
+    };
+
+    const redo = () => {
+        if (historyIndex >= history.length - 1)
+            return;
+
+        const next =
+            history[historyIndex + 1];
+
+        setLines(next.lines);
+        setShapes(next.shapes);
+        setTexts(next.texts);
+
+        setHistoryIndex(historyIndex + 1);
+    };
+
+    useEffect(() => {
+        setUndo(undo);
+        setRedo(redo);
+    }, [historyIndex]);
+
+    useEffect(() => {
+        const savedLines =
+            JSON.parse(
+                localStorage.getItem(
+                    `whiteboardLines-${roomId}`
+                )
+            ) || [];
+
+        const savedShapes =
+            JSON.parse(
+                localStorage.getItem(
+                    `whiteboardShapes-${roomId}`
+                )
+            ) || [];
+
+        const savedTexts =
+            JSON.parse(
+                localStorage.getItem(
+                    `whiteboardTexts-${roomId}`
+                )
+            ) || [];
+
+        setLines(savedLines);
+        setShapes(savedShapes);
+        setTexts(savedTexts);
+        const initialSnapshot = {
+            lines: savedLines,
+            shapes: savedShapes,
+            texts: savedTexts,
+        };
+
+        setHistory([initialSnapshot]);
+        setHistoryIndex(0);
+
+        setIsLoaded(true);
+    }, [roomId]);
+
+    useEffect(() => {
+        if (!isLoaded) return;
+
+        localStorage.setItem(
+            `whiteboardLines-${roomId}`,
+            JSON.stringify(lines)
+        );
+
+        localStorage.setItem(
+            `whiteboardShapes-${roomId}`,
+            JSON.stringify(shapes)
+        );
+
+        localStorage.setItem(
+            `whiteboardTexts-${roomId}`,
+            JSON.stringify(texts)
+        );
+    }, [lines, shapes, texts, isLoaded, roomId]);
 
     useEffect(() => {
         const resize = () => {
@@ -67,6 +157,113 @@ function Canvas() {
         );
     }, [fontFamily, fontSize]);
 
+    useEffect(() => {
+        setDeleteSelected(handleDeleteSelected);
+    }, [
+        selectedId,
+        selectedTextId,
+        shapes,
+        texts,
+    ]);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Delete") {
+                deleteSelected();
+            }
+        };
+
+        window.addEventListener(
+            "keydown",
+            handleKeyDown
+        );
+
+        return () =>
+            window.removeEventListener(
+                "keydown",
+                handleKeyDown
+            );
+    }, [deleteSelected]);
+
+    const saveBoard = () => {
+
+        const oldShape = selectedId;
+        const oldText = selectedTextId;
+
+        setSelectedId(null);
+        setSelectedTextId(null);
+
+        setTimeout(() => {
+
+            const uri =
+                stageRef.current.toDataURL({
+                    pixelRatio: 2,
+                    mimeType: "image/jpeg",
+                });
+
+            const link =
+                document.createElement("a");
+
+            link.download =
+                `DoodleDoc-${Date.now()}.jpeg`;
+
+            link.href = uri;
+
+            link.click();
+
+            setSelectedId(oldShape);
+            setSelectedTextId(oldText);
+
+        }, 100);
+    };
+
+    useEffect(() => {
+        setSaveBoard(saveBoard);
+    }, []);
+
+    const saveToHistory = (
+        newLines = lines,
+        newShapes = shapes,
+        newTexts = texts
+    ) => {
+        const snapshot = {
+            lines: JSON.parse(JSON.stringify(newLines)),
+            shapes: JSON.parse(JSON.stringify(newShapes)),
+            texts: JSON.parse(JSON.stringify(newTexts)),
+        };
+
+        const newHistory =
+            history.slice(0, historyIndex + 1);
+
+        newHistory.push(snapshot);
+
+        setHistory(newHistory);
+
+        setHistoryIndex(
+            newHistory.length - 1
+        );
+    };
+
+    const handleDeleteSelected = () => {
+
+        saveToHistory(lines, shapes, texts);
+        const updatedShapes =
+            shapes.filter(
+                shape => shape.id !== selectedId
+            );
+
+
+        const updatedTexts =
+            texts.filter(
+                text => text.id !== selectedTextId
+            );
+        setShapes(updatedShapes);
+        setTexts(updatedTexts);
+        setSelectedId(null);
+        setSelectedTextId(null);
+        setHasSelection(false);
+    };
+
     const updateShapePosition = (shapeId, x, y) => {
         setShapes(
             shapes.map((s) =>
@@ -88,7 +285,7 @@ function Canvas() {
 
         if (tool === "pen" || tool === "eraser") {
             setIsDrawing(true);
-
+            saveToHistory(lines, shapes, texts);
             setLines([
                 ...lines,
                 {
@@ -153,16 +350,36 @@ function Canvas() {
 
     const handleMouseUp = () => {
         if (
+            tool === "pen" ||
+            tool === "eraser"
+        ) {
+            saveToHistory(
+                lines,
+                shapes,
+                texts
+            );
+        }
+        if (
             previewShape &&
             !["pen", "eraser"].includes(tool)
         ) {
-            setShapes([
+            const newShape = {
+                id: Date.now(),
+                ...previewShape,
+            };
+
+            saveToHistory(
+                lines,
+                shapes,
+                texts
+            );
+
+            const updatedShapes = [
                 ...shapes,
-                {
-                    id: Date.now(),
-                    ...previewShape,
-                },
-            ]);
+                newShape,
+            ];
+
+            setShapes(updatedShapes);
         }
 
         setPreviewShape(null);
@@ -175,12 +392,14 @@ function Canvas() {
             className="w-full h-full relative"
         >
             <Stage
+                ref={stageRef}
                 width={size.width}
                 height={size.height}
                 onMouseDown={(e) => {
                     if (e.target === e.target.getStage()) {
                         setSelectedId(null);
                         setSelectedTextId(null);
+                        setHasSelection(false);
                     }
                     handleMouseDown(e);
                 }}
@@ -192,11 +411,7 @@ function Canvas() {
                         <Line
                             key={index}
                             points={line.points}
-                            stroke={
-                                line.tool === "eraser"
-                                    ? "#ffffff"
-                                    : line.color
-                            }
+                            stroke={line.color}
                             strokeWidth={
                                 line.tool === "eraser"
                                     ? 20
@@ -205,6 +420,11 @@ function Canvas() {
                             tension={0.5}
                             lineCap="round"
                             lineJoin="round"
+                            globalCompositeOperation={
+                                line.tool === "eraser"
+                                    ? "destination-out"
+                                    : "source-over"
+                            }
                         />
                     ))}
                     {shapes.map((shape) => {
@@ -220,9 +440,13 @@ function Canvas() {
                                     stroke="#D4AF37"
                                     strokeWidth={3}
                                     draggable
-                                    onClick={() => setSelectedId(shape.id)}
+                                    onClick={() => {
+                                        setSelectedId(shape.id);
+                                        setHasSelection(true);
+                                    }}
                                     onTap={() => setSelectedId(shape.id)}
                                     onDragEnd={(e) => {
+                                        saveToHistory(lines, shapes, texts);
                                         const updatedShapes = shapes.map((s) =>
                                             s.id === shape.id
                                                 ? {
@@ -249,15 +473,19 @@ function Canvas() {
                                     stroke="#D4AF37"
                                     strokeWidth={3}
                                     draggable
-                                    onClick={() => setSelectedId(shape.id)}
+                                    onClick={() => {
+                                        setSelectedId(shape.id);
+                                        setHasSelection(true);
+                                    }}
                                     onTap={() => setSelectedId(shape.id)}
-                                    onDragEnd={(e) =>
+                                    onDragEnd={(e) => {
+                                        saveToHistory(lines, shapes, texts);
                                         updateShapePosition(
                                             shape.id,
                                             e.target.x(),
                                             e.target.y()
                                         )
-                                    }
+                                    }}
                                 />
                             );
                         }
@@ -270,7 +498,10 @@ function Canvas() {
                                     stroke="#D4AF37"
                                     strokeWidth={3}
                                     draggable
-                                    onClick={() => setSelectedId(shape.id)}
+                                    onClick={() => {
+                                        setSelectedId(shape.id);
+                                        setHasSelection(true);
+                                    }}
                                     onTap={() => setSelectedId(shape.id)}
                                 />
                             );
@@ -285,7 +516,10 @@ function Canvas() {
                                     fill="#D4AF37"
                                     strokeWidth={3}
                                     draggable
-                                    onClick={() => setSelectedId(shape.id)}
+                                    onClick={() => {
+                                        setSelectedId(shape.id);
+                                        setHasSelection(true);
+                                    }}
                                     onTap={() => setSelectedId(shape.id)}
                                 />
                             );
@@ -314,7 +548,10 @@ function Canvas() {
                                     strokeWidth={3}
                                     closed
                                     draggable
-                                    onClick={() => setSelectedId(shape.id)}
+                                    onClick={() => {
+                                        setSelectedId(shape.id);
+                                        setHasSelection(true);
+                                    }}
                                     onTap={() => setSelectedId(shape.id)}
                                 />
                             );
@@ -433,6 +670,7 @@ function Canvas() {
                                 );
                             }}
                             onDragEnd={(e) => {
+                                saveToHistory(lines, shapes, texts);
                                 setTexts(
                                     texts.map((t) =>
                                         t.id === textObj.id
@@ -445,9 +683,10 @@ function Canvas() {
                                     )
                                 );
                             }}
-                            onClick={() =>
-                                setSelectedTextId(textObj.id)
-                            }
+                            onClick={() => {
+                                setSelectedTextId(textObj.id);
+                                setHasSelection(true);
+                            }}
                             onTap={() =>
                                 setSelectedTextId(textObj.id)
                             }
@@ -457,6 +696,7 @@ function Canvas() {
                                     : null
                             }
                             onTransformEnd={(e) => {
+                                saveToHistory(lines, shapes, texts);
                                 const node = e.target;
 
                                 const scaleX = node.scaleX();
@@ -506,30 +746,38 @@ function Canvas() {
                         if (e.key === "Enter") {
                             if (!textInput.value.trim()) {
                                 setTextInput(null);
+                                setTool("pen");
                                 return;
                             }
+                            const newText = {
+                                id: Date.now(),
+                                x: textInput.x,
+                                y: textInput.y,
+                                text: textInput.value,
+                                color,
+                                fontSize,
+                                fontFamily,
+                                isBold,
+                                isItalic,
+                                isUnderline,
+                            };
 
-                            setTexts([
+                            const updatedTexts = [
                                 ...texts,
-                                {
-                                    id: Date.now(),
+                                newText,
+                            ];
 
-                                    x: textInput.x,
-                                    y: textInput.y,
+                            setTexts(updatedTexts);
 
-                                    text: textInput.value,
-
-                                    color,
-                                    fontSize,
-                                    fontFamily,
-
-                                    isBold,
-                                    isItalic,
-                                    isUnderline,
-                                },
-                            ]);
+                            saveToHistory(
+                                lines,
+                                shapes,
+                                updatedTexts
+                            );
 
                             setTextInput(null);
+
+                            setTool("pen");
                         }
                     }}
                     className="absolute border rounded px-2 py-1 bg-white"

@@ -4,13 +4,36 @@ const useWhiteboardStore = create((set) => ({
     tool: "pen",
     color: "#3E627B",
     brushSize: 4,
-    fontFamily: "Inter",
-    fontSize: 16,
     isBold: false,
     isItalic: false,
     isUnderline: false,
     fontSize: 20,
     fontFamily: "Poppins",
+    deleteSelected: () => { },
+    hasSelection: false,
+    undo: () => { },
+    redo: () => { },
+    saveBoard: () => { },
+    setSaveBoard: (fn) =>
+        set({
+            saveBoard: fn,
+        }),
+    setUndo: (fn) =>
+        set({
+            undo: fn,
+        }),
+    setRedo: (fn) =>
+        set({
+            redo: fn,
+        }),
+    setHasSelection: (value) =>
+        set({
+            hasSelection: value,
+        }),
+    setDeleteSelected: (fn) =>
+        set({
+            deleteSelected: fn,
+        }),
     setFontSize: (fontSize) =>
         set({ fontSize }),
     setFontFamily: (fontFamily) =>
