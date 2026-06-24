@@ -390,11 +390,17 @@ function Canvas({ roomId }) {
         <div
             ref={containerRef}
             className="w-full h-full relative"
+            style={{
+                touchAction: "none",
+            }}
         >
             <Stage
                 ref={stageRef}
                 width={size.width}
                 height={size.height}
+                style={{
+                    touchAction: "none",
+                }}
                 onMouseDown={(e) => {
                     if (e.target === e.target.getStage()) {
                         setSelectedId(null);
@@ -405,6 +411,18 @@ function Canvas({ roomId }) {
                 }}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
+                onTouchStart={(e) => {
+                    if (e.target === e.target.getStage()) {
+                        setSelectedId(null);
+                        setSelectedTextId(null);
+                        setHasSelection(false);
+                    }
+                    handleMouseDown(e);
+                }}
+
+                onTouchMove={handleMouseMove}
+
+                onTouchEnd={handleMouseUp}
             >
                 <Layer>
                     {lines.map((line, index) => (
