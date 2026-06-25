@@ -5,7 +5,7 @@ A feature-rich online whiteboard built with **React**, **Konva**, **Zustand**, a
 ---
 ##  Live Demo
 
-*[https://doodle-doc.vercel.app/](https://doodle-doc.vercel.app/)**
+**[https://doodle-doc.vercel.app/](https://doodle-doc.vercel.app/)**
 
 ---
 
