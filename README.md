@@ -2,6 +2,13 @@
 
 A feature-rich online whiteboard built with **React**, **Konva**, **Zustand**, and **Tailwind CSS**. DoodleDoc allows users to draw, create shapes, add formatted text, edit content, and export their work as an image.
 
+---
+##  Live Demo
+
+*[https://doodle-doc.vercel.app/](https://doodle-doc.vercel.app/)**
+
+---
+
 ##  Features
 
 ###  Drawing Tools
