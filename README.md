@@ -1,107 +1,161 @@
 # 🎨 DoodleDoc
 
-A feature-rich online whiteboard built with **React**, **Konva**, **Zustand**, and **Tailwind CSS**. DoodleDoc allows users to draw, create shapes, add formatted text, edit content, and export their work as an image.
+<p align="center">
+  <em>A feature-rich online whiteboard for drawing, shapes, formatted text, and image export — built with React, Konva, Zustand, and Tailwind CSS.</em>
+</p>
+
+<p align="center">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <img alt="React" src="https://img.shields.io/badge/React-Frontend-61DAFB?logo=react">
+  <img alt="Konva" src="https://img.shields.io/badge/React%20Konva-Canvas%20Engine-0D83CD">
+  <img alt="Zustand" src="https://img.shields.io/badge/Zustand-State%20Management-443E38">
+  <img alt="TailwindCSS" src="https://img.shields.io/badge/TailwindCSS-Styling-38BDF8?logo=tailwindcss">
+  <img alt="Vercel" src="https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel">
+  <img alt="Status" src="https://img.shields.io/badge/status-active-success">
+</p>
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1000&color=38BDF8&center=true&vCenter=true&width=850&lines=Canvas-Based+Drawing+with+React+Konva.;Shapes%2C+Text+%26+Full+Formatting.;Room-Based+Whiteboard+Persistence.;Export+Your+Work+as+an+Image.;Undo%2FRedo+with+History+Stacks." />
+</p>
 
 ---
-##  Live Demo
+
+## Live Demo
 
 **[https://doodle-doc.vercel.app/](https://doodle-doc.vercel.app/)**
 
 ---
 
-##  Features
+## About
 
-###  Drawing Tools
-
-* Pen tool
-* Eraser tool
-* Adjustable brush size
-* Custom color picker
-
-###  Shapes
-
-* Rectangle
-* Circle
-* Diamond
-* Line
-* Arrow
-
-###  Text Editing
-
-* Add text anywhere on the canvas
-* Edit existing text
-* Font family selection
-* Font size selection
-* Bold text
-* Italic text
-* Underline text
-
-###  Shape Manipulation
-
-* Drag and move shapes
-* Resize shapes using handles
-* Select and edit objects
-
-### Actions
-
-* Undo
-* Redo
-* Delete selected shape/text
-* Save whiteboard as image
-
-###  Room-Based Whiteboards
-
-* Unique room IDs
-* Room-specific whiteboard persistence
-* Copy room ID with one click
-
-###  Persistence
-
-* Automatic saving using Local Storage
-* Whiteboard state restored on refresh
+**DoodleDoc** is a browser-based whiteboard application that brings freehand drawing, shape tools, and rich text editing into a single canvas workspace. Built on **React Konva** for canvas rendering and **Zustand** for lightweight, predictable state management, it supports room-based whiteboards with automatic Local Storage persistence — so a session's work survives a page refresh without needing a backend.
 
 ---
 
-##  Tech Stack
+## Features
 
-* **React.js**
-* **React Konva**
-* **Zustand**
-* **Tailwind CSS**
-* **Lucide React Icons**
-* **Local Storage API**
+### Drawing Tools
+
+| Feature | Status |
+|----------|--------|
+| Pen Tool | ✅ |
+| Eraser Tool | ✅ |
+| Adjustable Brush Size | ✅ |
+| Custom Color Picker | ✅ |
+
+### Shapes
+
+| Shape | Status |
+|--------|--------|
+| Rectangle | ✅ |
+| Circle | ✅ |
+| Diamond | ✅ |
+| Line | ✅ |
+| Arrow | ✅ |
+
+### Text Editing
+
+| Feature | Status |
+|----------|--------|
+| Add Text Anywhere on Canvas | ✅ |
+| Edit Existing Text | ✅ |
+| Font Family Selection | ✅ |
+| Font Size Selection | ✅ |
+| Bold / Italic / Underline | ✅ |
+
+### Shape Manipulation
+
+| Feature | Status |
+|----------|--------|
+| Drag and Move Shapes | ✅ |
+| Resize via Handles | ✅ |
+| Select and Edit Objects | ✅ |
+
+### Actions & Persistence
+
+| Feature | Status |
+|----------|--------|
+| Undo / Redo | ✅ |
+| Delete Selected Shape/Text | ✅ |
+| Export Whiteboard as Image | ✅ |
+| Room-Based Whiteboards | ✅ |
+| Unique Room IDs | ✅ |
+| Copy Room ID (One Click) | ✅ |
+| Auto-Save via Local Storage | ✅ |
+| State Restored on Refresh | ✅ |
 
 ---
 
-## 📸 Screenshots
+## Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Framework | React.js |
+| Canvas Engine | React Konva |
+| State Management | Zustand |
+| Styling | Tailwind CSS |
+| Icons | Lucide React |
+| Persistence | Local Storage API |
+| Deployment | Vercel |
+
+---
+
+## Application Flow
+
+```mermaid
+graph TD
+
+A[React UI]
+
+B[Zustand Store]
+
+C[React Konva Canvas]
+
+D[Local Storage]
+
+E[Room ID]
+
+A -->|User draws / adds shape or text| B
+
+B -->|Renders state| C
+
+C -->|Reflects live canvas| A
+
+B -->|Auto-persist on change| D
+
+E -->|Namespaces saved state| D
+
+D -->|Restore on load| B
+
+C -->|Export| F[PNG Image Download]
+```
+
+---
+
+## Screenshots
 
 ### Home Page
-
 ![Home](./Screenshots/home-page.png)
 
 ### Drawing Canvas
-
 ![Canvas](./Screenshots/canvas.png)
 
 ### Login Page
-
-![Shapes](./Screenshots/login-page.png)
+![Login](./Screenshots/login-page.png)
 
 ---
 
 ### Signup Page
-
-![Shapes](./Screenshots/signup-page.png)
+![Signup](./Screenshots/signup-page.png)
 
 ---
 
 ### Join Room Page
-
-![Shapes](./Screenshots/join-room-page.png)
+![Join Room](./Screenshots/join-room-page.png)
 
 ---
 
-##  Installation
+## Installation
 
 Clone the repository:
 
@@ -129,7 +183,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 src/
@@ -151,7 +205,7 @@ src/
 
 ---
 
-##  Learning Outcomes
+## Learning Outcomes
 
 While building DoodleDoc, I explored:
 
@@ -166,31 +220,29 @@ While building DoodleDoc, I explored:
 
 ---
 
-##  Future Improvements
+## Future Improvements
 
-* Real-time collaboration
-* Multi-user rooms
-* Firebase/Socket.IO integration
-* Export as PDF
-* Dark mode
-* Shape color customization
-* Custom shape library
-* Infinite canvas
+- [ ] Real-time collaboration
+- [ ] Multi-user rooms
+- [ ] Firebase / Socket.IO integration
+- [ ] Export as PDF
+- [ ] Dark mode
+- [ ] Shape color customization
+- [ ] Custom shape library
+- [ ] Infinite canvas
 
 ---
 
-##  Author
+## Author
 
 **Radhika Gupta**
-
-B.Tech Computer Science 
+B.Tech Computer Science
 Ajay Kumar Garg Engineering College
-
-GitHub: `https://github.com/Radhikagupta25`
+GitHub: [`https://github.com/Radhikagupta25`](https://github.com/Radhikagupta25)
 
 ---
 
-## ⭐ If you like this project
+## If You Like This Project
 
 Consider giving it a star on GitHub!
 
@@ -199,4 +251,3 @@ Consider giving it a star on GitHub!
 🍴 Fork the repository
 🚀 Build upon it
 ```
-
